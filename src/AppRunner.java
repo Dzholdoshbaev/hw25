@@ -50,7 +50,73 @@ public class AppRunner {
             allowProducts.addAll(getAllowedProducts().toArray());
             chooseAction(allowProducts);
         }if (choosenumber == 2){
-            
+            payWithCard();
+            print("Ваш баланс после пополнения : " + cardAcceptor.getAmount());
+        }
+    }
+    private void payWithCard(){
+       askCard();
+       chooseNumberOfFillMachine();
+    }
+    private void chooseNumberOfFillMachine(){
+        try{
+            print("Введите сумму пополнения до 130 ");
+            int chosenNumber = Integer.parseInt(scanner.nextLine().trim());
+            if (chosenNumber <= 0 ){
+                throw new UserInputExecption();
+            }if (chosenNumber > 130){
+                throw new UserInputExecption();
+            }
+            cardAcceptor.setAmount(cardAcceptor.getAmount() + chosenNumber);
+        }catch (NumberFormatException e){
+            print("Надо ввести число !");
+            chooseNumberOfFillMachine();
+        }catch (NullPointerException e){
+            print("Вы не ввели ничего !");
+            chooseNumberOfFillMachine();
+        }catch (UserInputExecption e){
+            print("Число не может быть 0 и больше 130 и быть со знаком - !");
+            chooseNumberOfFillMachine();
+        }
+    }
+    private void askCard(){
+        try{
+            print("Введите номер карты : ");
+            String input = scanner.nextLine().trim();
+            int numberOfCard = Integer.parseInt(input);
+            if (numberOfCard < 0 ){
+                throw new UserInputExecption();
+            }if (input.length() > 8 ){
+                throw new UserInputExecption();
+            }
+        }catch (NumberFormatException e){
+            print("Надо ввести число !");
+            askCard();
+        }catch (NullPointerException e){
+            print("Вы не ввели ничего !");
+            askCard();
+        }catch (UserInputExecption e){
+            print("Номер карты не может быть больше 8 цифр и быть со знаком - !");
+            askCard();
+        }
+        try{
+            print("Введите одноразовый пароль : ");
+            String inputPassword = scanner.nextLine().trim();
+            int numberOfPassword = Integer.parseInt(inputPassword);
+            if (numberOfPassword < 0 ){
+                throw new UserInputExecption();
+            }if (inputPassword.length() > 4 ){
+                throw new UserInputExecption();
+            }
+        }catch (NumberFormatException e){
+            print("Надо ввести число !");
+            askCard();
+        }catch (NullPointerException e){
+            print("Вы не ввели ничего !");
+            askCard();
+        }catch (UserInputExecption e){
+            print("Пароль не может быть больше 4 цифр и быть со знаком - !");
+            askCard();
         }
     }
     private int askPaymantChoice(){
