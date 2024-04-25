@@ -1,10 +1,10 @@
 import enums.ActionLetter;
+import exceptions.UserInputExecption;
 import model.*;
 import paymantMethod.CardAcceptor;
 import paymantMethod.CoinAcceptor;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
-
 import java.util.Scanner;
 
 public class AppRunner {
@@ -13,6 +13,7 @@ public class AppRunner {
 
     private final CoinAcceptor coinAcceptor;
     private final CardAcceptor cardAcceptor;
+    private Scanner scanner = new Scanner(System.in);
 
     private static boolean isExit = false;
 
@@ -39,13 +40,38 @@ public class AppRunner {
     private void startSimulation() {
         print("В автомате доступны:");
         showProducts(products);
+        print("Выберите способ оплаты : ");
+        print("1) Монетами 2) Картой ");
+        int choosenumber = askPaymantChoice();
+        if (choosenumber == 1){
+            print("Монет на сумму: " + coinAcceptor.getAmount());
 
-        print("Монет на сумму: " + coinAcceptor.getAmount());
-
-        UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
-        allowProducts.addAll(getAllowedProducts().toArray());
-        chooseAction(allowProducts);
-
+            UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
+            allowProducts.addAll(getAllowedProducts().toArray());
+            chooseAction(allowProducts);
+        }if (choosenumber == 2){
+            
+        }
+    }
+    private int askPaymantChoice(){
+        try{
+            int chosenNumber = Integer.parseInt(scanner.nextLine().trim());
+            if (chosenNumber <= 0 ){
+                throw new UserInputExecption();
+            }if (chosenNumber > 2){
+                throw new UserInputExecption();
+            }
+            return chosenNumber;
+        }catch (NumberFormatException e){
+            print("Надо ввести число !");
+            return askPaymantChoice();
+        }catch (NullPointerException e){
+            print("Вы не ввели ничего !");
+            return askPaymantChoice();
+        }catch (UserInputExecption e){
+            print("Число не может быть 0 и больше 2 и быть со знаком - !");
+            return askPaymantChoice();
+        }
     }
 
     private UniversalArray<Product> getAllowedProducts() {
