@@ -1,4 +1,4 @@
-package model;
+package paymantMethod;
 
 public class CardAcceptor {
     private int amount;
