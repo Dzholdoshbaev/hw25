@@ -10,6 +10,7 @@ public class AppRunner {
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
 
     private final CoinAcceptor coinAcceptor;
+    private final CardAcceptor cardAcceptor;
 
     private static boolean isExit = false;
 
@@ -23,6 +24,7 @@ public class AppRunner {
                 new Pistachios(ActionLetter.G, 130)
         });
         coinAcceptor = new CoinAcceptor(100);
+        cardAcceptor = new CardAcceptor(0);
     }
 
     public static void run() {
