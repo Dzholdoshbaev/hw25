@@ -52,6 +52,9 @@ public class AppRunner {
         }if (choosenumber == 2){
             payWithCard();
             print("Ваш баланс после пополнения : " + cardAcceptor.getAmount());
+            UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
+            allowProducts.addAll(getAllowedProducts().toArray());
+            chooseActionForCard(allowProducts);
         }
     }
     private void payWithCard(){
@@ -81,12 +84,12 @@ public class AppRunner {
     }
     private void askCard(){
         try{
-            print("Введите номер карты : ");
+            print("Введите номер карты из 8 цифр : ");
             String input = scanner.nextLine().trim();
             int numberOfCard = Integer.parseInt(input);
             if (numberOfCard < 0 ){
                 throw new UserInputExecption();
-            }if (input.length() > 8 ){
+            }if (input.length() != 8){
                 throw new UserInputExecption();
             }
         }catch (NumberFormatException e){
@@ -96,16 +99,16 @@ public class AppRunner {
             print("Вы не ввели ничего !");
             askCard();
         }catch (UserInputExecption e){
-            print("Номер карты не может быть больше 8 цифр и быть со знаком - !");
+            print("Номер карты должен быть 8 цифр и не может быть со знаком - !");
             askCard();
         }
         try{
-            print("Введите одноразовый пароль : ");
+            print("Введите одноразовый пароль из 4 цифр : ");
             String inputPassword = scanner.nextLine().trim();
             int numberOfPassword = Integer.parseInt(inputPassword);
             if (numberOfPassword < 0 ){
                 throw new UserInputExecption();
-            }if (inputPassword.length() > 4 ){
+            }if (inputPassword.length() != 4 ){
                 throw new UserInputExecption();
             }
         }catch (NumberFormatException e){
@@ -115,7 +118,7 @@ public class AppRunner {
             print("Вы не ввели ничего !");
             askCard();
         }catch (UserInputExecption e){
-            print("Пароль не может быть больше 4 цифр и быть со знаком - !");
+            print("Пароль должен быть из 4 цифр и не может быть со знаком - !");
             askCard();
         }
     }
@@ -176,8 +179,33 @@ public class AppRunner {
                 chooseAction(products);
             }
         }
-
-
+    }
+    private void chooseActionForCard(UniversalArray<Product> products) {
+        print(" a - Пополнить баланс");
+        showActions(products);
+        print(" h - Выйти");
+        String action = fromConsole().substring(0, 1);
+        if ("a".equalsIgnoreCase(action)) {
+            chooseNumberOfFillMachine();
+            print("Ваш баланс после пополнения : " + cardAcceptor.getAmount());
+            return;
+        }
+        try {
+            for (int i = 0; i < products.size(); i++) {
+                if (products.get(i).getActionLetter().equals(ActionLetter.valueOf(action.toUpperCase()))) {
+                    cardAcceptor.setAmount(cardAcceptor.getAmount() - products.get(i).getPrice());
+                    print("Вы купили " + products.get(i).getName());
+                    break;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            if ("h".equalsIgnoreCase(action)) {
+                isExit = true;
+            } else {
+                print("Недопустимая буква. Попрбуйте еще раз.");
+                chooseActionForCard(products);
+            }
+        }
     }
 
     private void showActions(UniversalArray<Product> products) {
